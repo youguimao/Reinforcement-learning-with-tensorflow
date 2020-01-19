@@ -139,7 +139,7 @@ class DeepQNetwork:
         # check to replace target parameters
         if self.learn_step_counter % self.replace_target_iter == 0:
             self.sess.run(self.replace_target_op)
-            print('\ntarget_params_replaced\n')
+            # print('\ntarget_params_replaced\n')
 
         # sample batch memory from all memory
         if self.memory_counter > self.memory_size:
@@ -206,6 +206,35 @@ class DeepQNetwork:
         plt.ylabel('Cost')
         plt.xlabel('training steps')
         plt.show()
+
+    def print_optimal_policy(self):
+        optimal_policy = []
+        for i in range(4):
+            optimal_policy.append(([]))
+            for j in range(4):
+                if [i, j] == [2, 2]:
+                    optimal_policy[-1].append('G')
+                    continue
+
+                observation = np.array([i, j])
+                observation = observation[np.newaxis, :]
+                actions_value = self.sess.run(self.q_eval, feed_dict={self.s: observation})
+                best_action = np.argmax(actions_value)
+                if best_action == 0:
+                    optimal_policy[-1].append('U')
+                elif best_action == 1:
+                    optimal_policy[-1].append('D')
+                elif best_action == 2:
+                    optimal_policy[-1].append('L')
+                elif best_action == 3:
+                    optimal_policy[-1].append('R')
+        for row in optimal_policy:
+            print(row)
+
+
+
+
+
 
 
 
